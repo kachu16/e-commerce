@@ -1,6 +1,7 @@
 import { Fragment, useState } from 'react'
 import { Dialog, Transition } from '@headlessui/react'
 import { XMarkIcon } from '@heroicons/react/24/outline'
+import { Link } from 'react-router-dom'
 
 const products = [
   {
@@ -30,9 +31,9 @@ function Cart() {
   const [open, setOpen] = useState(true)
 
   return (
-    <div className="mx-auto mt-12 bg-white max-w-7xl px-4 sm:px-6 lg:px-8">
+    <div className="mx-auto mt-8 bg-white max-w-7xl px-4 sm:px-6 lg:px-8">
      <div className="border-t border-gray-200 px-4 py-6 sm:px-6">
-      <h1 className='text-4xl my-5 font-bold tracking-tight text-gray-900'>Cart</h1>
+      <h1 className='text-4xl my-5 font-bold tracking-tight text-gray-900='>Cart</h1>
                         <div className="flow-root">
                           <ul role="list" className="-my-6 divide-y divide-gray-200">
                             {products.map((product) => (
@@ -56,7 +57,13 @@ function Cart() {
                                     <p className="mt-1 text-sm text-gray-500">{product.color}</p>
                                   </div>
                                   <div className="flex flex-1 items-end justify-between text-sm">
-                                    <p className="text-gray-500">Qty {product.quantity}</p>
+                                    <div className="text-gray-500">
+                                      <label htmlFor='quantity' className='inline mr-5 text-sm font-medium leading-6 text-gray-900'>Qty</label>
+                                      <select>
+                                        <option value="1">1</option>
+                                        <option value="2">2</option>
+                                      </select>
+                                    </div>
 
                                     <div className="flex">
                                       <button
@@ -81,24 +88,26 @@ function Cart() {
                       </div>
                       <p className="mt-0.5 text-sm text-gray-500">Shipping and taxes calculated at checkout.</p>
                       <div className="mt-6">
-                        <a
-                          href="#"
+                        <Link
+                          to="/checkout"
                           className="flex items-center justify-center rounded-md border border-transparent bg-indigo-600 px-6 py-3 text-base font-medium text-white shadow-sm hover:bg-indigo-700"
                         >
                           Checkout
-                        </a>
+                        </Link>
                       </div>
                       <div className="mt-6 flex justify-center text-center text-sm text-gray-500">
                         <p>
                           or
+                          <Link to='/'>
                           <button
                             type="button"
-                            className="font-medium text-indigo-600 hover:text-indigo-500"
+                            className="font-medium text-indigo-600 hover:text-indigo-500 ml-2"
                             onClick={() => setOpen(false)}
                           >
                             Continue Shopping
                             <span aria-hidden="true"> &rarr;</span>
                           </button>
+                          </Link>
                         </p>
                       </div>
                     </div>
