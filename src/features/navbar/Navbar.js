@@ -11,7 +11,6 @@ const user = {
     'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80',
 }
 const navigation = [
-  { name: 'Home', href: '/', current: true },
   { name: 'Login', href: '/login', current: false },
   { name: 'Signup', href: '/signup', current: false },
 ]
@@ -35,12 +34,14 @@ function Navbar ({children}) {
               <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
                 <div className="flex h-16 items-center justify-between">
                   <div className="flex items-center">
-                    <div className="flex-shrink-0">
+                    
+                      <div className="flex-shrink-0">
+                      <Link to='/'>
                       <img
                         className="h-8 w-8"
                         src={logo}
                         alt="Your Company"
-                      />
+                      /></Link>
                     </div>
                     <div className="hidden md:block">
                       <div className="ml-10 flex items-baseline space-x-4">
