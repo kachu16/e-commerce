@@ -4,7 +4,7 @@ import { XMarkIcon } from '@heroicons/react/24/outline'
 import { ChevronDownIcon, FunnelIcon, MinusIcon, PlusIcon, Squares2X2Icon } from '@heroicons/react/20/solid'
 import { ChevronLeftIcon, ChevronRightIcon , StarIcon} from '@heroicons/react/20/solid'
 import { Link } from 'react-router-dom'
-import {fetchAllProductsAsync, selectAllProducts} from "../productSlice";
+import {fetchAllProductsAsync, fetchProductsByFilterAsync, selectAllProducts} from "../productSlice";
 import { useDispatch, useSelector } from 'react-redux'
 
 const items = [
@@ -21,24 +21,44 @@ const sortOptions = [
 ]
 const filters = [
   {
-    id: 'categories',
+    id: 'category',
     name: 'Category',
     options: [
-   { value: 'Smartphones', label: 'Smartphones', checked: false },
-  { value: 'Laptops', label: 'Laptops', checked: false },
-  { value: 'Fragrances', label: 'Fragrances', checked: false },
-  { value: 'Skincare', label: 'Skincare', checked: false },
-  { value: 'Groceries', label: 'Groceries', checked: false },
-  { value: 'Home-decoration',
+     { value: 'smartphones', label: 'Smartphones', checked: false },
+  { value: 'laptops', label: 'Laptops', checked: false },
+  { value: 'fragrances', label: 'Fragrances', checked: false },
+  { value: 'skincare', label: 'Skincare', checked: false },
+  { value: 'groceries', label: 'Groceries', checked: false },
+  { value: 'home-decoration',
     label: 'Home decoration',
-    checked: false } 
+    checked: false },
+  { value: 'furniture', label: 'Furniture', checked: false },
+  { value: 'tops', label: 'Tops', checked: false },
+  { value: 'womens-dresses',
+    label: 'Womens dresses',
+    checked: false },
+  { value: 'womens-shoes', label: 'Womens shoes', checked: false },
+  { value: 'mens-shirts', label: 'Mens shirts', checked: false },
+  { value: 'mens-shoes', label: 'Mens shoes', checked: false },
+  { value: 'mens-watches', label: 'Mens watches', checked: false },
+  { value: 'womens-watches',
+    label: 'Womens watches',
+    checked: false },
+  { value: 'womens-bags', label: 'Womens bags', checked: false },
+  { value: 'womens-jewellery',
+    label: 'Womens jewellery',
+    checked: false },
+  { value: 'sunglasses', label: 'Sunglasses', checked: false },
+  { value: 'automotive', label: 'Automotive', checked: false },
+  { value: 'motorcycle', label: 'Motorcycle', checked: false },
+  { value: 'lighting', label: 'Lighting', checked: false }
     ],
   },
   {
     id: 'brand',
     name: 'Brands',
     options: [
-{ value: 'Apple', label: 'Apple', checked: false },
+      { value: 'Apple', label: 'Apple', checked: false },
   { value: 'Samsung', label: 'Samsung', checked: false },
   { value: 'OPPO', label: 'OPPO', checked: false },
   { value: 'Huawei', label: 'Huawei', checked: false },
@@ -74,7 +94,7 @@ const filters = [
   { value: 'Baking Food Items',
     label: 'Baking Food Items',
     checked: false },
-  { value: 'fauji', label: 'fauji', checked: false },
+  { value: 'fauji', label: 'Fauji', checked: false },
   { value: 'Dry Rose', label: 'Dry Rose', checked: false },
   { value: 'Boho Decor', label: 'Boho Decor', checked: false },
   { value: 'Flying Wooden',
@@ -82,24 +102,134 @@ const filters = [
     checked: false },
   { value: 'LED Lights', label: 'LED Lights', checked: false },
   { value: 'luxury palace',
-    label: 'luxury palace',
+    label: 'Luxury palace',
     checked: false },
-  { value: 'Golden', label: 'Golden', checked: false }
+  { value: 'Golden', label: 'Golden', checked: false },
+  { value: 'Furniture Bed Set',
+    label: 'Furniture Bed Set',
+    checked: false },
+  { value: 'Ratttan Outdoor',
+    label: 'Ratttan Outdoor',
+    checked: false },
+  { value: 'Kitchen Shelf',
+    label: 'Kitchen Shelf',
+    checked: false },
+  { value: 'Multi Purpose',
+    label: 'Multi Purpose',
+    checked: false },
+  { value: 'AmnaMart', label: 'AmnaMart', checked: false },
+  { value: 'Professional Wear',
+    label: 'Professional Wear',
+    checked: false },
+  { value: 'Soft Cotton', label: 'Soft Cotton', checked: false },
+  { value: 'Top Sweater', label: 'Top Sweater', checked: false },
+  { value: 'RED MICKY MOUSE..',
+    label: 'RED MICKY MOUSE..',
+    checked: false },
+  { value: 'Digital Printed',
+    label: 'Digital Printed',
+    checked: false },
+  { value: 'Ghazi Fabric', label: 'Ghazi Fabric', checked: false },
+  { value: 'IELGY', label: 'IELGY', checked: false },
+  { value: 'IELGY fashion',
+    label: 'IELGY fashion',
+    checked: false },
+  { value: 'Synthetic Leather',
+    label: 'Synthetic Leather',
+    checked: false },
+  { value: 'Sandals Flip Flops',
+    label: 'Sandals Flip Flops',
+    checked: false },
+  { value: 'Maasai Sandals',
+    label: 'Maasai Sandals',
+    checked: false },
+  { value: 'Arrivals Genuine',
+    label: 'Arrivals Genuine',
+    checked: false },
+  { value: 'Vintage Apparel',
+    label: 'Vintage Apparel',
+    checked: false },
+  { value: 'FREE FIRE', label: 'FREE FIRE', checked: false },
+  { value: 'The Warehouse',
+    label: 'The Warehouse',
+    checked: false },
+  { value: 'Sneakers', label: 'Sneakers', checked: false },
+  { value: 'Rubber', label: 'Rubber', checked: false },
+  { value: 'Naviforce', label: 'Naviforce', checked: false },
+  { value: 'SKMEI 9117', label: 'SKMEI 9117', checked: false },
+  { value: 'Strap Skeleton',
+    label: 'Strap Skeleton',
+    checked: false },
+  { value: 'Stainless', label: 'Stainless', checked: false },
+  { value: 'Eastern Watches',
+    label: 'Eastern Watches',
+    checked: false },
+  { value: 'Luxury Digital',
+    label: 'Luxury Digital',
+    checked: false },
+  { value: 'Watch Pearls', label: 'Watch Pearls', checked: false },
+  { value: 'Bracelet', label: 'Bracelet', checked: false },
+  { value: 'LouisWill', label: 'LouisWill', checked: false },
+  { value: 'Copenhagen Luxe',
+    label: 'Copenhagen Luxe',
+    checked: false },
+  { value: 'Steal Frame', label: 'Steal Frame', checked: false },
+  { value: 'Darojay', label: 'Darojay', checked: false },
+  { value: 'Fashion Jewellery',
+    label: 'Fashion Jewellery',
+    checked: false },
+  { value: 'Cuff Butterfly',
+    label: 'Cuff Butterfly',
+    checked: false },
+  { value: 'Designer Sun Glasses',
+    label: 'Designer Sun Glasses',
+    checked: false },
+  { value: 'mastar watch', label: 'Mastar watch', checked: false },
+  { value: 'Car Aux', label: 'Car Aux', checked: false },
+  { value: 'W1209 DC12V', label: 'W1209 DC12V', checked: false },
+  { value: 'TC Reusable', label: 'TC Reusable', checked: false },
+  { value: 'Neon LED Light',
+    label: 'Neon LED Light',
+    checked: false },
+  { value: 'METRO 70cc Motorcycle - MR70',
+    label: 'METRO 70cc Motorcycle   MR70',
+    checked: false },
+  { value: 'BRAVE BULL', label: 'BRAVE BULL', checked: false },
+  { value: 'shock absorber',
+    label: 'Shock absorber',
+    checked: false },
+  { value: 'JIEPOLLY', label: 'JIEPOLLY', checked: false },
+  { value: 'Xiangle', label: 'Xiangle', checked: false },
+  { value: 'lightingbrilliance',
+    label: 'Lightingbrilliance',
+    checked: false },
+  { value: 'Ifei Home', label: 'Ifei Home', checked: false },
+  { value: 'DADAWU', label: 'DADAWU', checked: false },
+  { value: 'YIOSI', label: 'YIOSI', checked: false } 
     ],
   },
 ]
-
-
-
 function classNames(...classes) {
   return classes.filter(Boolean).join(' ')
 }
+
+
 function ProductList() {
 
   const dispatch = useDispatch();
 
   const products = useSelector(selectAllProducts); 
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false)
+  const [filter, setFilter] = useState({});
+
+  const handleFilter = (e,section, option) => {
+    const newFilter = {...filter, [section.id] : option.value};
+    setFilter(newFilter);
+
+    dispatch(fetchProductsByFilterAsync(newFilter))
+    console.log(section.id, option.value);
+  }
+
   useEffect(()=>{
     dispatch(fetchAllProductsAsync());
   },[dispatch]);
@@ -177,6 +307,7 @@ function ProductList() {
                                       defaultValue={option.value}
                                       type="checkbox"
                                       defaultChecked={option.checked}
+                                      onChange={(e) => handleFilter(e,section, option)}
                                       className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
                                     />
                                     <label
@@ -299,6 +430,7 @@ function ProductList() {
                                   defaultValue={option.value}
                                   type="checkbox"
                                   defaultChecked={option.checked}
+                                  onChange={(e) => handleFilter(e,section, option)}
                                   className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
                                 />
                                 <label
@@ -324,28 +456,28 @@ function ProductList() {
             <div className="mx-auto max-w-2xl px-4 sm:px-6 lg:max-w-7xl lg:px-8">
               <div className="mt-6 grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-3 xl:gap-x-8">
                 {products.map((product) => (
-                  <Link to='/product-detail' key={product.id} >
+                  <Link to='/product-detail' key={product?.id} >
                   <div className="rounded-md group relative border-gray-200 border-solid border-2 p-2">
                     <div className="min-h-60 aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-md bg-gray-200 lg:aspect-none group-hover:opacity-75 lg:h-60">
                       <img
-                        src={product.thumbnail}
-                        alt={product.title}
+                        src={product?.thumbnail}
+                        alt={product?.title}
                         className="h-full w-full object-cover object-center lg:h-full lg:w-full"
                       />
                     </div>
                     <div className="mt-4 flex justify-between">
                       <div>
-                        <h3 className="text-sm text-gray-700">
-                          <a href={product.thumbnail}>
-                            <span aria-hidden="true" className="absolute inset-0" />
-                            {product.title}
-                          </a>
-                        </h3>
-                        <p className="mt-1 text-sm text-gray-500"><StarIcon className='w-5 h-5 inline'/><span className='align-bottom'>{product.rating}</span></p>
+                    <h3 className="text-sm text-gray-700">
+                      <div href={product.thumbnail}>
+                        <span aria-hidden="true" className="absolute inset-0" />
+                        {product.title}
+                      </div>
+                    </h3>
+                        <p className="mt-1 text-sm text-gray-500"><StarIcon className='w-5 h-5 inline'/><span className='align-bottom'>{product?.rating}</span></p>
                       </div>
                       <div>
-                      <p className="text-sm font-medium text-gray-900">${Math.round(product.price*(1-product.discountPercentage/100))}</p>
-                       <p className="text-sm font-medium text-gray-400 line-through">${product.price}</p>
+                      <p className="text-sm font-medium text-gray-900">${Math.round(product?.price*(1-product?.discountPercentage/100))}</p>
+                       <p className="text-sm font-medium text-gray-400 line-through">${product?.price}</p>
                       </div>
                     </div>
                   </div>
